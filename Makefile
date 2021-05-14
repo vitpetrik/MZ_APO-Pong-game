@@ -7,7 +7,7 @@ CXXFLAGS = -g -std=gnu++11 -O1 -Wall
 LDFLAGS = -lrt -lpthread
 LDLIBS = -lm
 
-SOURCES = aposem-main.c mzapo_phys.c mzapo_parlcd.c serialize_lock.c
+SOURCES = aposem-main.c mzapo_phys.c mzapo_parlcd.c serialize_lock.c display.c game.c
 #SOURCES += font_prop14x16.c font_rom8x16.c
 TARGET_EXE = aposem-pong
 #TARGET_IP ?= 192.168.202.127

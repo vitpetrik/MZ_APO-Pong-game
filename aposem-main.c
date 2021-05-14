@@ -1,17 +1,7 @@
-#define _POSIX_C_SOURCE 200112L
+#include "config.h"
+#include "display.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdint.h>
-#include <time.h>
-#include <unistd.h>
-
-#include "mzapo_parlcd.h"
-#include "mzapo_phys.h"
-#include "mzapo_regs.h"
-#include "serialize_lock.h"
-
-int main(int argc, char *argv[])
+int main(int argc, char *argv[]){
   /* Serialize execution of applications */
   /* Try to acquire lock the first */
   if (serialize_lock(1) <= 0) {
@@ -24,11 +14,15 @@ int main(int argc, char *argv[])
     }
   }
 
-  printf("Hello world\n");
+  display_data display;
+  display.lcd_membase = map_phys_address(PARLCD_REG_BASE_PHYS, PARLCD_REG_SIZE, 0);
+  unsigned char *led_membase = map_phys_address(SPILED_REG_BASE_PHYS, SPILED_REG_SIZE, 0);
+  if(display.lcd_membase==NULL || led_membase==NULL)
+    exit(EXIT_FAILURE);
 
-  sleep(4);
+  parlcd_hx8357_init(display.lcd_membase);
 
-  printf("Goodbye world\n");
+  draw_display(&display);
 
   serialize_unlock();
   return 0;
