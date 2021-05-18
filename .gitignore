@@ -1,4 +1,5 @@
-*.o
+obj
+build
 depend
 change_me
 connect.gdb

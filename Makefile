@@ -7,9 +7,13 @@ CXXFLAGS = -g -std=gnu++11 -O1 -Wall
 LDFLAGS = -lrt -lpthread
 LDLIBS = -lm
 
-SOURCES = aposem-main.c mzapo_phys.c mzapo_parlcd.c serialize_lock.c display.c game.c
-SOURCES += font_prop14x16.c font_rom8x16.c
-TARGET_EXE = aposem-pong
+SOURCES_DIR := src
+OBJECTS_DIR := obj
+BUILD_DIR := build
+
+SOURCES := $(wildcard $(SOURCES_DIR)/*.c)
+SOURCES += $(wildcard $(SOURCES_DIR)/*.cpp)
+TARGET_EXE = $(BUILD_DIR)/aposem-pong
 TARGET_IP ?= 192.168.1.112
 ifeq ($(TARGET_IP),)
 ifneq ($(filter debug run,$(MAKECMDGOALS)),)
@@ -26,8 +30,8 @@ TARGET_USER ?= root
 SSH_OPTIONS=-i /home/lendvi/mzapo-root-key
 #SSH_OPTIONS=-o 'ProxyJump=ctu_login@postel.felk.cvut.cz'
 
-OBJECTS += $(filter %.o,$(SOURCES:%.c=%.o))
-OBJECTS += $(filter %.o,$(SOURCES:%.cpp=%.o))
+OBJECTS += $(subst $(SOURCES_DIR), $(OBJECTS_DIR),  $(filter %.o,$(SOURCES:%.c=%.o)))
+OBJECTS += $(subst $(SOURCES_DIR), $(OBJECTS_DIR),  $(filter %.o,$(SOURCES:%.cpp=%.o)))
 
 #$(warning OBJECTS=$(OBJECTS))
 
@@ -39,16 +43,19 @@ LINKER = $(CXX)
 LDFLAGS += $(CXXFLAGS) $(CPPFLAGS)
 endif
 
-%.o:%.c
+$(OBJECTS_DIR)/%.o:$(SOURCES_DIR)/%.c | $(OBJECTS_DIR)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
 
-%.o:%.cpp
+$(OBJECTS_DIR)/%.o:$(SOURCES_DIR)/%.cpp | $(OBJECTS_DIR)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 all: $(TARGET_EXE)
 
-$(TARGET_EXE): $(OBJECTS)
+$(TARGET_EXE): $(OBJECTS) | $(BUILD_DIR)
 	$(LINKER) $(LDFLAGS) -L. $^ -o $@ $(LDLIBS)
+
+$(OBJECTS_DIR) $(BUILD_DIR):
+	mkdir -p $@ $<
 
 .PHONY : dep all run copy-executable debug
 
