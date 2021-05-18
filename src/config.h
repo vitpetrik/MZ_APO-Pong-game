@@ -18,6 +18,7 @@
 
 typedef struct ball{
   int posx, posy;
+  int stepx, stepy;
   char color;
 } ball;
 
@@ -26,13 +27,21 @@ typedef struct player {
   bool winner;
   char color;
   int score;
+  int offset;
   int position;   //player position 0-(sizey-size)
   int size;       //player size 
 } player;
 
+typedef struct playground {
+  int xsize, ysize;
+  int goal;
+} playgroud;
+
 typedef struct display_data {
   unsigned char* lcd_membase;
   player player1, player2;
+  playgroud playgroud;
+  ball ball;
   int sizex, sizey;
 } display_data;
 
