@@ -17,8 +17,8 @@ int main(int argc, char *argv[]){
 
   display_data display;
   display.lcd_membase = map_phys_address(PARLCD_REG_BASE_PHYS, PARLCD_REG_SIZE, 0);
-  unsigned char *led_membase = map_phys_address(SPILED_REG_BASE_PHYS, SPILED_REG_SIZE, 0);
-  if(display.lcd_membase==NULL || led_membase==NULL)
+  display.led_membase = map_phys_address(SPILED_REG_BASE_PHYS, SPILED_REG_SIZE, 0);
+  if(display.lcd_membase==NULL || display.led_membase==NULL)
     exit(EXIT_FAILURE);
 
   parlcd_hx8357_init(display.lcd_membase);
@@ -42,9 +42,12 @@ int main(int argc, char *argv[]){
 
   int counter = 0;
   while(game){
+    knobs knobs = readKnobs(&display);
+
     bool update = false;
     if(counter == 10){
-      move(&display);
+      if(move(&display))
+        game = false;
       counter = 0;
       update = true;
     }
@@ -56,6 +59,11 @@ int main(int argc, char *argv[]){
     }
     nanosleep(&loopdelay, NULL);
   }
+
+  printf("Game over %s won!\n", (display.player1.winner)?display.player1.nick:display.player2.nick);
+  //display post game stats here
+
+
   serialize_unlock();
   return 0;
 }

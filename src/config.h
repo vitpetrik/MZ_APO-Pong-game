@@ -16,6 +16,10 @@
 
 //#define _POSIX_C_SOURCE 200112L
 
+typedef struct knobs{
+  unsigned char bknob, gknob, rknob; 
+} knobs;
+
 typedef struct ball{
   int posx, posy;
   int stepx, stepy;
@@ -39,6 +43,7 @@ typedef struct playground {
 
 typedef struct display_data {
   unsigned char* lcd_membase;
+  unsigned char* led_membase;
   player player1, player2;
   playgroud playgroud;
   ball ball;
