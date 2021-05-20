@@ -8,7 +8,7 @@ void draw_display(display_data *data) {
   canvas_init(frame_buffer, LCD_WIDTH, LCD_HEIGHT);
 
   int playgroud_offset_x = (LCD_WIDTH-data->playgroud.xsize)/2;
-  int playgroud_offset_y = (LCD_WIDTH-data->playgroud.ysize)/2;
+  int playgroud_offset_y = (LCD_HEIGHT-data->playgroud.ysize)/2;
 
   canvas_drawRect(playgroud_offset_x, playgroud_offset_y, data->playgroud.xsize, data->playgroud.ysize, 0xff);
 
