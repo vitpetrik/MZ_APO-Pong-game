@@ -16,6 +16,12 @@
 
 //#define _POSIX_C_SOURCE 200112L
 
+#define LCD_WIDTH 480
+#define LCD_HEIGHT 320
+
+#define BALL_SIZE 10
+#define RACKET_WIDTH 10
+
 typedef struct knobs{
   unsigned char bknob, gknob, rknob; 
 } knobs;

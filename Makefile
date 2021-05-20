@@ -12,7 +12,10 @@ OBJECTS_DIR := obj
 BUILD_DIR := build
 
 SOURCES := $(wildcard $(SOURCES_DIR)/*.c)
+SOURCES += $(wildcard $(SOURCES_DIR)/canvas/*.c)
 SOURCES += $(wildcard $(SOURCES_DIR)/*.cpp)
+SOURCES += $(wildcard $(SOURCES_DIR)/canvas/*.cpp)
+
 TARGET_EXE = $(BUILD_DIR)/aposem-pong
 TARGET_IP ?= 192.168.1.112
 ifeq ($(TARGET_IP),)
